@@ -1,5 +1,5 @@
 import { REST, Routes } from "discord.js";
-import { ingest } from "./commands";
+import { ingest } from "../commands";
 
 export async function registerCommands(clientId: string) {
   const commands = [ingest.command];
