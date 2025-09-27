@@ -7,6 +7,8 @@ import {
   type CacheType,
   type Interaction,
 } from "discord.js";
+import db from "../db";
+import { parsePlayersText } from "../utils/misc";
 
 const name = "ingest";
 
@@ -44,8 +46,25 @@ const interaction = async (interaction: Interaction<CacheType>) => {
     });
 
     const textInput = interaction.fields.getTextInputValue("textInput");
+
+    const players = parsePlayersText(textInput);
+
+    if (!players.length) {
+      console.log("No players found");
+      return;
+    }
+
+    players.forEach((player) => {
+      if (!player) return;
+
+      const statement = db.prepare(
+        "INSERT OR IGNORE INTO aliases (alias, fabid, eosid) VALUES (?, ?, ?)"
+      );
+      statement.run(player.alias, player.fabid, player.eosid);
+    });
+
     console.log(textInput);
   }
 };
 
-export { name, command, interaction };
+export { command, interaction, name };
