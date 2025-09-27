@@ -17,7 +17,7 @@ const command = new SlashCommandBuilder()
   .setDescription("Ingest data from your input");
 
 const interaction = async (interaction: Interaction<CacheType>) => {
-  if (interaction.isChatInputCommand()) {
+  if (interaction.isChatInputCommand() && interaction.commandName === name) {
     const modal = new ModalBuilder().setCustomId("modal").setTitle("Ingest");
 
     const input = new TextInputBuilder()
@@ -31,7 +31,6 @@ const interaction = async (interaction: Interaction<CacheType>) => {
       .setMinLength(1)
       .setMaxLength(4000);
 
-    // Create action rows (each text input needs its own row)
     const firstActionRow =
       new ActionRowBuilder<TextInputBuilder>().addComponents(input);
 
@@ -40,7 +39,7 @@ const interaction = async (interaction: Interaction<CacheType>) => {
     await interaction.showModal(modal);
   }
 
-  if (interaction.isModalSubmit()) {
+  if (interaction.isModalSubmit() && interaction.customId !== "modal") {
     await interaction.reply({
       content: "Your submission was received successfully!",
     });
@@ -62,9 +61,7 @@ const interaction = async (interaction: Interaction<CacheType>) => {
       );
       statement.run(player.alias, player.fabid, player.eosid);
     });
-
-    console.log(textInput);
   }
 };
 
-export { command, interaction, name };
+export const ingest = { command, interaction, name };

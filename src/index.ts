@@ -1,11 +1,12 @@
 import { Client, Events, GatewayIntentBits } from "discord.js";
-import { ingest } from "./commands";
+import { ingest, checkId } from "./commands";
 import { registerCommands } from "./utils/discord";
 
 const client = new Client({ intents: [GatewayIntentBits.Guilds] });
 
 client.on(Events.InteractionCreate, async (interaction) => {
   ingest.interaction(interaction);
+  checkId.interaction(interaction);
 });
 
 client.on("clientReady", async () => {

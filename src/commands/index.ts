@@ -1,1 +1,2 @@
-export * as ingest from "./ingest";
+export { ingest } from "./ingest";
+export { checkId } from "./check-id";

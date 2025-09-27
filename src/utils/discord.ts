@@ -1,8 +1,8 @@
 import { REST, Routes } from "discord.js";
-import { ingest } from "../commands";
+import { ingest, checkId } from "../commands";
 
 export async function registerCommands(clientId: string) {
-  const commands = [ingest.command];
+  const commands = [ingest.command, checkId.command];
 
   const rest = new REST().setToken(process.env.API_KEY!);
 
