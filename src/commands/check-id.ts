@@ -1,10 +1,10 @@
 import {
-  ChatInputCommandInteraction,
   SlashCommandBuilder,
   type CacheType,
   type Interaction,
 } from "discord.js";
 import db from "../db";
+import type { Schema } from "../types";
 
 const name = "check-id";
 
@@ -24,9 +24,20 @@ const interaction = async (interaction: Interaction<CacheType>) => {
   if (interaction.isChatInputCommand() && interaction.commandName === name) {
     const id = interaction.options.getString("id");
 
+    if (!id) {
+      await interaction.reply({
+        content: "ID is required",
+        ephemeral: true,
+      });
+      return;
+    }
+
     const statement = db
-      .prepare("SELECT alias FROM aliases WHERE fabid = ? OR eosid = ?")
-      .get(id, id);
+      .prepare<Schema, Schema>(
+        "SELECT alias FROM aliases WHERE fabid = ? OR eosid = ?"
+      )
+      .all(id, id)
+      .map((row) => row.alias);
 
     if (!statement) {
       await interaction.reply({
