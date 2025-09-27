@@ -46,6 +46,8 @@ const interaction = async (interaction: Interaction<CacheType>) => {
 
     const textInput = interaction.fields.getTextInputValue("textInput");
 
+    console.log(textInput);
+
     const players = parsePlayersText(textInput);
 
     if (!players.length) {
